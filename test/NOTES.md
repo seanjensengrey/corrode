@@ -25,13 +25,13 @@ PATH=../.cabal-sandbox/bin:$PATH py.test test.py -r ap
 Currently there are 7 tests
 
 ```
-FAIL test.py::test_al1
-FAIL test.py::test_sw0
 FAIL test.py::test_struct0
-FAIL test.py::test_al0
+FAIL test.py::test_sw0
+PASSED test.py::test_al0
+PASSED test.py::test_al1
 PASSED test.py::test_for1
-PASSED test.py::test_ten
 PASSED test.py::test_struct1
+PASSED test.py::test_ten
 ```
 
 ## Creating a Test

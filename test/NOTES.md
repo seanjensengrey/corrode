@@ -1,6 +1,9 @@
 
 # PoC Test Suite For Corrode
 
+see https://github.com/jameysharp/corrode/issues/44
+    for a discussion about testing corrode
+
 The suite takes a body of c-files that return
 an integer via an exit code. This provides a nice
 process encapsulation and very simple communication

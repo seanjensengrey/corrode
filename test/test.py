@@ -1,4 +1,3 @@
-import random
 import glob
 import re
 import os
@@ -8,11 +7,31 @@ from collections import namedtuple
 
 CorrodeTestCase = namedtuple("TestCase", "case file expected_return_code")
 
-def randstr(n):
-    return ''.join(chr(random.randint(ord('a'),ord('z'))) for _ in range(n))
+def c_artifact(test_case):
+    return test_case.case + '-gcc'
+
+
+def corrode_artifact(test_case):
+    return test_case.case + ".rs"
+
+
+def rust_artifact(test_case):
+    return test_case.case + '-rust'
+
+
+isfile = os.path.isfile
+
 
 
 def _collect_test_cases():
+    """
+    gather all the .c files in the current directory
+        for each one that has a
+            // expected-return:<int>
+        entry, generate a CorrodeTestCase for it
+
+    @:returns List[CorrodeTestCase]
+    """
     c_files = glob.glob("*.c")
     expected_m = re.compile("// expected-return:([\d]*)")
     test_cases = []
@@ -31,28 +50,18 @@ def _collect_test_cases():
 
     return test_cases
 
-def c_artifact(test_case):
-    return test_case.case + '-gcc'
 
-def corrode_artifact(test_case):
-    return test_case.case + ".rs"
-
-def rust_artifact(test_case):
-    return test_case.case + '-rust'
-
-isfile = os.path.isfile
-
-def c_compile(test_case):
+def compile_c(test_case):
     subprocess.run(['gcc','-o',test_case.case + '-gcc', test_case.file])
     assert isfile(c_artifact(test_case)), "test_case:%s did not compile (gcc)"  % (test_case.case)
 
 
-def corrode(test_case):
+def translate_corrode(test_case):
     subprocess.run(['corrode',test_case.file])
     assert isfile(corrode_artifact(test_case)), "test_case:%s did not translate to rust" % (test_case.case)
 
 
-def rust_compile(test_case):
+def compile_rust(test_case):
     subprocess.run(['rustc','-o', test_case.case + '-rust', test_case.case + '.rs'])
     assert isfile(rust_artifact(test_case)), "test_case:%s did not compile (rust)" % (test_case.case)
 
@@ -72,14 +81,14 @@ def clean(test_case):
 
 def prepare(test_case):
     clean(test_case)
-    c_compile(test_case)
-    corrode(test_case)
-    rust_compile(test_case)
+    compile_c(test_case)
+    translate_corrode(test_case)
+    compile_rust(test_case)
 
 
 def run_test_case(test_case):
     prepare(test_case)
-    proc = subprocess.run(['./' + test_case.case + '-rust'])
+    proc = subprocess.run(['./' + rust_artifact(test_case)])
     assert proc.returncode == test_case.expected_return_code, "case:%s failed expected return code:%d found:%d" % (
         test_case.case,
         test_case.expected_return_code,
@@ -94,7 +103,7 @@ def mk_test_runner(test_case):
     return fn
 
 
+# inject test methods into globals
+# so that py.test can pick them up
 for tc in _collect_test_cases():
     globals()['test_' + tc.case] = mk_test_runner(tc)
-
-print(globals())

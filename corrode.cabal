@@ -20,6 +20,7 @@ library
                        containers,
                        language-c >=0.4 && <0.6,
                        markdown-unlit,
+                       containers,
                        pretty,
                        transformers
 

@@ -1,8 +1,5 @@
 sudo: required
 dist: trusty
-language: rust
-python:
- - "3.5"
 
 # Add new environments to the build here:
 env:

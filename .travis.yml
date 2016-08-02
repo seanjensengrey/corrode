@@ -41,7 +41,8 @@ install:
 # TODO: Add an example or other tests.
 script:
   - source test.env/bin/activate
-  - cd test; pip install -r requirements.txt
+  - ls
+  - cd corrode/test; pip install -r requirements.txt; py.test test.py
   - corrode
   - rustc --version
   - lsb_release -rc

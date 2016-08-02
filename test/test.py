@@ -7,6 +7,8 @@ from collections import namedtuple
 
 CorrodeTestCase = namedtuple("TestCase", "case file expected_return_code")
 
+import pdb
+
 def c_artifact(test_case):
     return test_case.case + '-gcc'
 
@@ -52,17 +54,17 @@ def _collect_test_cases():
 
 
 def compile_c(test_case):
-    subprocess.run(['gcc','-o',test_case.case + '-gcc', test_case.file])
+    subprocess.call(['gcc','-o',test_case.case + '-gcc', test_case.file])
     assert isfile(c_artifact(test_case)), "test_case:%s did not compile (gcc)"  % (test_case.case)
 
 
 def translate_corrode(test_case):
-    subprocess.run(['corrode',test_case.file])
+    subprocess.call(['corrode',test_case.file])
     assert isfile(corrode_artifact(test_case)), "test_case:%s did not translate to rust" % (test_case.case)
 
 
 def compile_rust(test_case):
-    subprocess.run(['rustc','-o', test_case.case + '-rust', test_case.case + '.rs'])
+    subprocess.call(['rustc','-o', test_case.case + '-rust', test_case.case + '.rs'])
     assert isfile(rust_artifact(test_case)), "test_case:%s did not compile (rust)" % (test_case.case)
 
 
@@ -88,11 +90,11 @@ def prepare(test_case):
 
 def run_test_case(test_case):
     prepare(test_case)
-    proc = subprocess.run(['./' + rust_artifact(test_case)])
-    assert proc.returncode == test_case.expected_return_code, "case:%s failed expected return code:%d found:%d" % (
+    return_code = subprocess.call(['./' + rust_artifact(test_case)])
+    assert return_code == test_case.expected_return_code, "case:%s failed expected return code:%d found:%d" % (
         test_case.case,
         test_case.expected_return_code,
-        proc.returncode
+        return_code 
     )
 
 

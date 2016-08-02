@@ -37,6 +37,7 @@ before_install:
 install:
   - echo $PATH
   - ls
+  - "pip install -r test/requirements.txt"
 #  - pip install -r test/requirements.txt
   - virtualenv --python=python2 test.env
   - source test.env/bin/activate

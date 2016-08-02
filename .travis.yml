@@ -1,5 +1,5 @@
-language: rust, python
-python:
+language: rust
+python:, python
  - "3.5"
 
 # Sudo used for custom apt setup
@@ -31,9 +31,12 @@ before_install:
 # install happy and alex first, see: https://github.com/jameysharp/corrode/issues/57
 install:
   - echo $PATH
-  - pip install -r test/requirements.txt
-#  - virtualenv --python=python2 test.env
-#  - source test.env/bin/activate
+  - ls
+#  - pip install -r test/requirements.txt
+  - virtualenv --python=python2 test.env
+  - source test.env/bin/activate
+  - python --version
+  - python2 --version
   - cabal --version
   - ghc --version
   - cabal install happy

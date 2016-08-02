@@ -1,4 +1,7 @@
 language: rust
+language: python
+python:
+ - "3.5"
 
 # Sudo used for custom apt setup
 sudo: true
@@ -19,8 +22,8 @@ before_install:
   - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
   - travis_retry sudo apt-get update
   - travis_retry sudo apt-get install gcc
-  - travis_retry sudo apt-get install python-virtualenv
-  - travis_retry sudo apt-get install python-pip
+#  - travis_retry sudo apt-get install python-virtualenv
+#  - travis_retry sudo apt-get install python-pip
   - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER
   - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
   - export PATH=$HOME/.cabal/bin:$PATH
@@ -29,9 +32,9 @@ before_install:
 # install happy and alex first, see: https://github.com/jameysharp/corrode/issues/57
 install:
   - echo $PATH
-  - virtualenv --python=python2 test.env
-  - source test.env/bin/activate
-  - pip install -U pip setuptools
+  - pip install -r test/requirements.txt
+#  - virtualenv --python=python2 test.env
+#  - source test.env/bin/activate
   - cabal --version
   - ghc --version
   - cabal install happy

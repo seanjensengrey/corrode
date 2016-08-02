@@ -1,5 +1,6 @@
 sudo: required
 dist: trusty
+language: rust
 
 # Add new environments to the build here:
 env:
@@ -60,4 +61,5 @@ script:
   - rustc --version
   - lsb_release -rc
   - gcc --version
+  - ./test.sh
   - true

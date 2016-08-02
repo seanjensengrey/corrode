@@ -51,15 +51,11 @@ install:
 
 # TODO: Add an example or other tests.
 script:
-  - source test.env/bin/activate
-  - pip install -r test/requirements.txt
-  - ls
-  - cd test
-  - ls
-  - py.test test.py
   - corrode
   - rustc --version
   - lsb_release -rc
   - gcc --version
+  - echo $pwd
+  - ls
   - ./test.sh
   - true
